@@ -5,6 +5,7 @@ import re
 
 import re
 
+# SecureString class
 class SecureString:
   def __init__(self, password: str):
     if not self.is_password_strong(password):
