@@ -5,12 +5,11 @@ import re
 
 import re
 
-class User:
-  def __init__(self, username: str, password: str):
+class SecureString:
+  def __init__(self, password: str):
     if not self.is_password_strong(password):
       raise ValueError("Password must be 8 characters or longer and contain at least one number, one uppercase letter, one lowercase letter, and one special character.")
-    self.username = username
-    self.hashed_password = HashedPassword(password)
+    self.password = password
 
   @staticmethod
   def is_password_strong(password: str):
@@ -27,19 +26,24 @@ class User:
       return False
     return True
 
-class LoginCredentials:
+class User:
   def __init__(self, username: str, password: str):
     self.username = username
-    self.password = password
+    self.hashed_password = HashedPassword(SecureString(password))
 
 class HashedPassword:
-  def __init__(self, password: str):
-    self.value = self.make_hashed_password(password)
+  def __init__(self, secure_string: SecureString):
+    self.value = self.make_hashed_password(secure_string.password)
 
   @staticmethod
   def make_hashed_password(password: str):
     hashed_value = hashlib.sha256(password.encode()).hexdigest()
     return hashed_value
+
+class LoginCredentials:
+  def __init__(self, username: str, password: str):
+    self.username = username
+    self.password = password
 
 def login(credentials: LoginCredentials):
   # Hash the input password
