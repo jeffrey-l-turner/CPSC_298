@@ -1,9 +1,6 @@
 import re
 import hashlib
 import sqlite3
-import re
-
-import re
 
 # SecureString class
 class SecureString:
