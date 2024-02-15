@@ -1,32 +1,18 @@
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    password: HashedPassword;
-}
+import { SecureString } from 'secure-string-library';
 
-interface LoginCredentials {
+interface User {
     username: string;
     password: SecureString;
 }
 
+interface LoginCredentials {
+    username: string;
+    password: string;
+}
+
 interface HashedPassword {
-    hash: string;
-    salt: string;
+    algorithm: string; // Details specific to the chosen hashing algorithm
+    hash: string; // Hashed password value
 }
 
-type SecureString = string; // Placeholder for SecureString implementation
-
-function handleUserLogin(credentials: LoginCredentials): User {
-    // Implement secure password hashing logic here
-    const user: User = {
-        id: 1,
-        username: credentials.username,
-        email: "user@example.com",
-        password: {
-            hash: "hashedPassword",
-            salt: "saltValue"
-        }
-    };
-    return user;
-}
+export { User, LoginCredentials, HashedPassword };
