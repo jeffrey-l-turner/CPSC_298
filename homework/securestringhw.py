@@ -106,5 +106,3 @@ def test():
   print("All tests passed")
 
 test()
-
-# This is a comment just to test the webhook
