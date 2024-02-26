@@ -1,0 +1,7 @@
+I put a gravity sim that I coded in python into tiktokenizer and then added some whitespace and a query. After I made the additions, 
+as expected, the values changed quite a bit. The different values will point to slightly different experts when the LLM accesses the 
+mixture of experts.
+
+The 'flow' of the LLM starting at tokenization is as follows: The LLM tokenizes the prompt. Based on the generated tokens, the LLM 
+accesses a mixture of experts tailored to the query. These experts contain domain specific knowledge like coding, physics, english, etc.. 
+The mixture of experts then processes the tokens and generates the output. 

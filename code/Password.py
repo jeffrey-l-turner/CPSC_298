@@ -1,6 +1,6 @@
 import re
 import hashlib
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 # Define the necessary data structures with type annotations
 
