@@ -3,7 +3,7 @@
 ## Housekeeping
 - You will receive a DM if you have not taken quiz, completed assignments, or setup CI channel notifications...
 - * [How to hook in Discord](https://gist.github.com/SGTGunner/50d6a3cc0d489cf779f77695ba3e22ea)
-- Abandoning use of Azure AI for now; have not found commercial sponsore (yet)
+- Abandoning use of Azure AI for now; have not found commercial sponsor (yet)
 - Plan on setting up local LLMs w/Aider week after next 
 - Class lecture videos now avaialable on permalink (see Canvas)
 - Should be able to install [Warp under WSL](https://github.com/warpdotdev/Warp/issues/4240#issuecomment-1960429829)
