@@ -1,4 +1,4 @@
-# Lecture 5 - March 6, 2024
+# Lecture 6 - March 6, 2024
 
 ## Housekeeping
 - Reminder: You will receive a DM if you have not taken quiz, completed assignments, or setup CI channel notifications...
