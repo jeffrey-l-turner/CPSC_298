@@ -1,0 +1,142 @@
+Token count
+
+1087
+
+Price per prompt
+
+$0.001087
+
+import json
+import os
+import dotenv
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
+from langchain.vectorstores import Chroma
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains import ConversationalRetrievalChain
+from langchain.document_loaders import TextLoader
+from langchain.memory import ConversationBufferMemory
+from langchain.chat_models import ChatOpenAI
+import pandas as pd
+import requests
+from openai import OpenAI
+
+dotenv.load_dotenv()
+filePath = "/Users/nathangarcia/Documents/SCI/XCR_CLASS_SCHED_DATA.csv"
+def send_csv_contents_to_openai_api(file_path):
+    try:
+        # Load the CSV file into a DataFrame
+        df = pd.read_csv(file_path)
+        
+        # Convert the DataFrame to a JSON string
+        # Ensure orient='records' to get a list of records
+        data_to_send = df.to_json(orient='records')
+        
+        # Parse the JSON string back into a Python list of dictionaries
+        # This step ensures the data is in the correct format for the JSON payload
+        data_to_send = json.loads(data_to_send)
+        
+        # Convert the Python object back to a JSON string to send in the request
+        data_to_send = json.dumps(data_to_send)
+
+        # Print the JSON string that will be sent
+        #print("Data being sent to OpenAI API:", data_to_send)
+
+        # Specify the API URL for embeddings or another appropriate endpoint
+        url = 'https://api.openai.com/v1/embeddings'
+        
+        # Include your OpenAI API key
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {os.getenv("OPENAI_API_KEY")}'
+        }
+        
+        # Send the request with the JSON data
+        response = requests.post(url, headers=headers, data=data_to_send)
+        
+        # Check the response and return the result
+        if response.status_code == 200:
+            print("Success:", response.json())
+            return response.json()
+        else:
+            print("Error:", response.status_code, response.text)
+            return None
+    except Exception as e:
+        print(f"Error processing and sending CSV file contents: {e}")
+        return None
+
+"""def load_csv_file_as_json(file_path):
+    csv_json_documents = []
+    try:
+        with open(file_path, mode='r', encoding='utf-8') as csvfile:
+            csvreader = csv.DictReader(csvfile)
+            for row in csvreader:
+                print(row)  # Debugging: Print each row read from the CSV
+                if all(row.values()):
+                    csv_json_documents.append(json.dumps(row))
+                else:
+                    print("Row with empty values:", row)  # Debugging: Print rows with empty values
+    except Exception as e:
+        print(f"Error reading CSV file: {e}")  # Print any errors encountered
+    return csv_json_documents
+
+csv_file_path = '/mnt/data/XCR_CLASS_SCHED_DATA.csv'  # Make sure the path is correct based on your file upload
+csv_json_documents = load_csv_file_as_json(csv_file_path)
+print("Loaded CSV documents:", csv_json_documents[:5])  # Print first 5 documents for inspection
+
+
+
+csv_file_path = 'XCR_CLASS_SCHED_DATA.csv'
+csv_json_documents = load_csv_file_as_json(csv_file_path)"""
+send_csv_contents_to_openai_api(filePath)
+txt_documents = []
+input_folder = "input"
+if os.path.exists(input_folder):
+    files = os.listdir(input_folder)
+    for file_name in files:
+        if file_name.endswith(".txt"):
+            loader = TextLoader(os.path.join(input_folder, file_name))
+            loaded = loader.load()
+            txt_documents.extend(loaded)
+
+#all_documents = csv_json_documents + txt_documents
+
+text_splitter = CharacterTextSplitter(chunk_size=15000, chunk_overlap=500)
+texts = text_splitter.split_documents(txt_documents)
+
+embeddings = OpenAIEmbeddings()
+vectorstore = Chroma.from_documents(texts, embeddings)
+
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+system_template = """Use the following pieces of context to answer the users question. Only use the supplied context to answer.
+If you cannot find the answer from the pieces of context, just say that you don't know, don't try to make up an answer. You are now a Chapman
+University advisor. if asked abot class times, professors, etc, look for the json stuff.
+----------------
+{context}"""
+messages = [
+    SystemMessagePromptTemplate.from_template(system_template),
+    HumanMessagePromptTemplate.from_template("{question}")
+]
+qa_prompt = ChatPromptTemplate.from_messages(messages)
+
+qa = ConversationalRetrievalChain.from_llm(ChatOpenAI(model_name="gpt-3.5-turbo-16k", temperature=0), vectorstore.as_retriever(search_kwargs={"k": 4}), combine_docs_chain_kwargs={"prompt": qa_prompt}, memory=memory)
+
+while True:
+    query = input("> ")
+    if query == "exit":
+        break
+    result = qa({"question": query})
+    print(result['answer'])
+
+
+
+
+   
+
+
+[475, 3024, 198, 475, 2709, 198, 475, 92386, 198, 1527, 8859, 8995, 41541, 25624, 5949, 2192, 1179, 5377, 15836, 26566, 25624, 198, 1527, 8859, 8995, 61848, 13044, 1179, 744, 2097, 55715, 7423, 11, 11344, 2097, 55715, 7423, 11, 13149, 55715, 7423, 198, 1527, 8859, 8995, 48203, 44569, 1179, 35318, 64, 198, 1527, 8859, 8995, 2858, 17489, 466, 1179, 16007, 1199, 20805, 466, 198, 1527, 8859, 8995, 5442, 1771, 1179, 56496, 1697, 12289, 7379, 838, 19368, 198, 1527, 8859, 8995, 17926, 12693, 388, 1179, 2991, 9360, 198, 1527, 8859, 8995, 37711, 1179, 51930, 4187, 10869, 198, 1527, 8859, 8995, 27215, 31892, 1179, 13149, 5109, 15836, 198, 475, 19130, 439, 7900, 198, 475, 7540, 198, 1527, 1825, 2192, 1179, 5377, 15836, 271, 51993, 5214, 32041, 3239, 746, 37797, 284, 3605, 7283, 9809, 589, 526, 8362, 689, 55830, 14, 71679, 34079, 9150, 14051, 87308, 8055, 11468, 702, 755, 3708, 14347, 17096, 2401, 11563, 2192, 11959, 4971, 2703, 997, 262, 1456, 512, 286, 674, 9069, 279, 28545, 1052, 1139, 264, 46886, 198, 286, 6907, 284, 7900, 4217, 14347, 4971, 2703, 340, 1827, 286, 674, 7316, 279, 46886, 311, 264, 4823, 925, 198, 286, 674, 30379, 11744, 1151, 27295, 6, 311, 636, 264, 1160, 315, 7576, 198, 286, 828, 2401, 13877, 284, 6907, 2446, 9643, 7, 15226, 1151, 27295, 1329, 1827, 286, 674, 15118, 279, 4823, 925, 1203, 1139, 264, 13325, 1160, 315, 58614, 198, 286, 674, 1115, 3094, 26420, 279, 828, 374, 304, 279, 4495, 3645, 369, 279, 4823, 7885, 198, 286, 828, 2401, 13877, 284, 3024, 23818, 2657, 2401, 13877, 340, 1827, 286, 674, 7316, 279, 13325, 1665, 1203, 311, 264, 4823, 925, 311, 3708, 304, 279, 1715, 198, 286, 828, 2401, 13877, 284, 3024, 22252, 2657, 2401, 13877, 696, 286, 674, 8377, 279, 4823, 925, 430, 690, 387, 3288, 198, 286, 674, 1374, 446, 1061, 1694, 3288, 311, 5377, 15836, 5446, 12421, 828, 2401, 13877, 696, 286, 674, 48495, 279, 5446, 5665, 369, 71647, 477, 2500, 8475, 15233, 198, 286, 2576, 284, 364, 2485, 1129, 2113, 5949, 2192, 916, 5574, 16, 59753, 25624, 1270, 1827, 286, 674, 30834, 701, 5377, 15836, 5446, 1401, 198, 286, 7247, 284, 341, 310, 364, 2831, 11038, 1232, 364, 5242, 9108, 756, 310, 364, 18616, 1232, 282, 6, 27497, 314, 437, 49563, 446, 32033, 15836, 11669, 6738, 909, 44441, 286, 457, 1827, 286, 674, 11244, 279, 1715, 449, 279, 4823, 828, 198, 286, 2077, 284, 7540, 6679, 6659, 11, 7247, 55185, 11, 828, 23686, 2401, 13877, 340, 1827, 286, 674, 4343, 279, 2077, 323, 471, 279, 1121, 198, 286, 422, 2077, 4397, 4229, 624, 220, 1049, 512, 310, 1194, 446, 7336, 12421, 2077, 4421, 2455, 310, 471, 2077, 4421, 746, 286, 775, 512, 310, 1194, 446, 1480, 12421, 2077, 4397, 4229, 11, 2077, 2858, 340, 310, 471, 2290, 198, 262, 3734, 4204, 439, 384, 512, 286, 1194, 968, 1, 1480, 8863, 323, 11889, 28545, 1052, 8970, 25, 314, 68, 14790, 286, 471, 2290, 271, 12885, 755, 2865, 14347, 2517, 12162, 9643, 4971, 2703, 997, 262, 13448, 9643, 77027, 284, 4260, 262, 1456, 512, 286, 449, 1825, 4971, 2703, 11, 3941, 1151, 81, 518, 11418, 1151, 4867, 12, 23, 873, 439, 98995, 512, 310, 13448, 11397, 284, 13448, 72201, 5172, 42683, 1213, 340, 310, 369, 2872, 304, 13448, 11397, 512, 394, 1194, 7991, 8, 220, 674, 11338, 3252, 25, 8377, 1855, 2872, 1373, 505, 279, 28545, 198, 394, 422, 682, 7991, 10883, 34257, 504, 13448, 9643, 77027, 2102, 9488, 22252, 7991, 1192, 394, 775, 512, 504, 1194, 446, 3179, 449, 4384, 2819, 12421, 2872, 8, 220, 674, 11338, 3252, 25, 8377, 7123, 449, 4384, 2819, 198, 262, 3734, 4204, 439, 384, 512, 286, 1194, 968, 1, 1480, 5403, 28545, 1052, 25, 314, 68, 57061, 220, 674, 8377, 904, 6103, 23926, 198, 262, 471, 13448, 9643, 77027, 271, 18596, 2517, 2703, 284, 3434, 41982, 13469, 34079, 9150, 14051, 87308, 8055, 11468, 6, 220, 674, 7557, 2771, 279, 1853, 374, 4495, 3196, 389, 701, 1052, 8298, 198, 18596, 9643, 77027, 284, 2865, 14347, 2517, 12162, 9643, 42683, 2517, 2703, 340, 1374, 446, 23172, 28545, 9477, 12421, 13448, 9643, 77027, 3530, 20, 2526, 220, 674, 8377, 1176, 220, 20, 9477, 369, 26767, 1038, 18596, 2517, 2703, 284, 364, 55, 9150, 14051, 87308, 8055, 11468, 1270, 18596, 9643, 77027, 284, 2865, 14347, 2517, 12162, 9643, 42683, 2517, 2703, 8, 7275, 6820, 14347, 17096, 2401, 11563, 2192, 11959, 30705, 340, 8754, 77027, 284, 4260, 1379, 15626, 284, 330, 1379, 702, 333, 2709, 3960, 12347, 5498, 15626, 997, 262, 3626, 284, 2709, 33576, 5498, 15626, 340, 262, 369, 1052, 1292, 304, 3626, 512, 286, 422, 1052, 1292, 41215, 5798, 8754, 15497, 310, 16432, 284, 2991, 9360, 9835, 3960, 5563, 5498, 15626, 11, 1052, 1292, 1192, 310, 6799, 284, 16432, 5214, 746, 310, 8091, 77027, 16209, 7, 15961, 696, 2, 543, 77027, 284, 13448, 9643, 77027, 489, 8091, 77027, 271, 1342, 17489, 466, 284, 16007, 1199, 20805, 466, 42677, 2424, 28, 3965, 410, 11, 12143, 66894, 28, 2636, 340, 87042, 284, 1495, 17489, 466, 5402, 77027, 27174, 77027, 696, 12529, 25624, 284, 5377, 15836, 26566, 25624, 746, 3295, 4412, 284, 35318, 64, 6521, 77027, 7383, 82, 11, 71647, 696, 17717, 284, 51930, 4187, 10869, 64330, 3173, 429, 9884, 20389, 498, 471, 24321, 3702, 696, 9125, 8864, 284, 4304, 10464, 279, 2768, 9863, 315, 2317, 311, 4320, 279, 3932, 3488, 13, 8442, 1005, 279, 17665, 2317, 311, 4320, 627, 2746, 499, 4250, 1505, 279, 4320, 505, 279, 9863, 315, 2317, 11, 1120, 2019, 430, 499, 1541, 956, 1440, 11, 1541, 956, 1456, 311, 1304, 709, 459, 4320, 13, 1472, 527, 1457, 264, 60914, 198, 31272, 37713, 13, 422, 4691, 671, 354, 538, 3115, 11, 45724, 11, 5099, 11, 1427, 369, 279, 3024, 6392, 627, 776, 198, 90, 2196, 92, 7275, 16727, 284, 2330, 262, 744, 2097, 55715, 7423, 6521, 8864, 47106, 8864, 1350, 262, 11344, 2097, 55715, 7423, 6521, 8864, 14303, 7998, 14790, 933, 15809, 62521, 284, 13149, 55715, 7423, 6521, 24321, 56805, 696, 15809, 284, 56496, 1697, 12289, 7379, 838, 19368, 6521, 44095, 76, 66138, 5109, 15836, 7790, 1292, 429, 70, 418, 12, 18, 13, 20, 2442, 324, 754, 12, 845, 74, 498, 9499, 28, 15, 705, 4724, 4412, 5470, 1311, 9104, 424, 21079, 37335, 16160, 74, 794, 220, 19, 39942, 16343, 50792, 31683, 37335, 16160, 41681, 794, 89596, 62521, 2186, 5044, 28, 17717, 696, 3556, 3082, 512, 262, 3319, 284, 1988, 64953, 14501, 262, 422, 3319, 624, 330, 13966, 4764, 286, 1464, 198, 262, 1121, 284, 89596, 17289, 7998, 794, 3319, 3602, 262, 1194, 4556, 681, 9399, 24287, 1432, 262, 1432]
+
+Show whitespace
+Built by dqbd. Created with the generous help from  Diagram.
+
