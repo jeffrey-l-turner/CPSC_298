@@ -36,7 +36,7 @@
 - Create PR under [../assignments/HuggingFace] using your Local LLM setup. (Students will do this differently)
 
 ## References:
-- [Hugging Face]()
+- [Hugging Face](https://huggingface.co/)
 - [Aider on Discord](https://discord.com/channels/1131200896827654144/1133060780649087048/1216657830539563088)
 - [Final Assignment Dataset](https://huggingface.co/datasets/sayakpaul/hf-codegen-v2)
 - [Groc and Mathematical Model Incompleteness with AI](https://www.technologyreview.com/2024/03/04/1089403/large-language-models-amazing-but-nobody-knows-why/)
