@@ -31,7 +31,7 @@
 - Agentic Approaches
 
 ### Assignment Review
-- Run LLM Locally (); Options:
+- [Run LLM Locally](https://semaphoreci.com/blog/local-llm); Options:
 - * [LM Studio](https://LMStudio.ai/)
 - * [Chat Dev IDE](https://chromewebstore.google.com/detail/chatdev-ide-building-your/dopllopmmfnghbahgbdejnkebfcmomej) - (Requires API access)
 - * Custom Aider Setup - if you need help, see me in office hours (virtual today)
