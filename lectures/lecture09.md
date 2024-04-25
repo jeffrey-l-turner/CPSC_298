@@ -46,3 +46,4 @@
 ### Resources
 - [3Blue1Brown: Transformers and GPT](https://youtu.be/wjZofJX0v4M)
 - [ Berman on Albert NG](https://youtu.be/ZYf9V2fSFwU))
+- [GPT Repo Loader](https://github.com/mpoon/gpt-repository-loader)
