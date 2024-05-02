@@ -1,0 +1,87 @@
+Token count
+
+631
+
+Price per prompt
+
+$0.000631
+
+#!/usr/bin/env python3
+from langchain.chains import RetrievalQA
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.vectorstores import Chroma
+from langchain.llms import Ollama
+import chromadb
+import os
+import argparse
+import time
+
+model = os.environ.get("MODEL", "mistral")
+# For embeddings model, the example uses a sentence-transformers model
+# https://www.sbert.net/docs/pretrained_models.html 
+# "The all-mpnet-base-v2 model provides the best quality, while all-MiniLM-L6-v2 is 5 times faster and still offers good quality."
+embeddings_model_name = os.environ.get("EMBEDDINGS_MODEL_NAME", "all-MiniLM-L6-v2")
+persist_directory = os.environ.get("PERSIST_DIRECTORY", "db")
+target_source_chunks = int(os.environ.get('TARGET_SOURCE_CHUNKS',4))
+
+from constants import CHROMA_SETTINGS
+
+def main():
+    # Parse the command line arguments
+    args = parse_arguments()
+    embeddings = HuggingFaceEmbeddings(model_name=embeddings_model_name)
+
+    db = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
+
+    retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
+    # activate/deactivate the streaming StdOut callback for LLMs
+    callbacks = [] if args.mute_stream else [StreamingStdOutCallbackHandler()]
+
+    llm = Ollama(model=model, callbacks=callbacks)
+
+    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, return_source_documents= not args.hide_source)
+    # Interactive questions and answers
+    while True:
+        query = input("\nEnter a query: ")
+        if query == "exit":
+            break
+        if query.strip() == "":
+            continue
+
+        # Get the answer from the chain
+        start = time.time()
+        res = qa(query)
+        answer, docs = res['result'], [] if args.hide_source else res['source_documents']
+        end = time.time()
+
+        # Print the result
+        print("\n\n> Question:")
+        print(query)
+        print(answer)
+
+        # Print the relevant sources used for the answer
+        for document in docs:
+            print("\n> " + document.metadata["source"] + ":")
+            print(document.page_content)
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='privateGPT: Ask questions to your documents without an internet connection, '
+                                                 'using the power of LLMs.')
+    parser.add_argument("--hide-source", "-S", action='store_true',
+                        help='Use this flag to disable printing of source documents used for answers.')
+
+    parser.add_argument("--mute-stream", "-M",
+                        action='store_true',
+                        help='Use this flag to disable the streaming StdOut callback for LLMs.')
+
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    main()
+8872, 7208, 8923, 14695, 10344, 18, 198, 1527, 8859, 8995, 5442, 1771, 1179, 20035, 838, 48622, 198, 1527, 8859, 8995, 41541, 25624, 1179, 473, 36368, 16680, 26566, 25624, 198, 1527, 8859, 8995, 72134, 85058, 68516, 1179, 45910, 23586, 2729, 7646, 3126, 198, 1527, 8859, 8995, 48203, 44569, 1179, 35318, 64, 198, 1527, 8859, 8995, 60098, 1026, 1179, 507, 657, 3105, 198, 475, 22083, 40691, 198, 475, 2709, 198, 475, 23122, 198, 475, 892, 271, 2590, 284, 2709, 24656, 673, 446, 61537, 498, 330, 80024, 3545, 1158, 2, 1789, 71647, 1646, 11, 279, 3187, 5829, 264, 11914, 33952, 388, 1646, 198, 2, 3788, 1129, 2185, 516, 9339, 5181, 27057, 37359, 36822, 31892, 2628, 720, 2, 330, 791, 682, 12, 1331, 4816, 31113, 8437, 17, 1646, 5825, 279, 1888, 4367, 11, 1418, 682, 5364, 6729, 11237, 8288, 21, 8437, 17, 374, 220, 20, 3115, 10819, 323, 2103, 6209, 1695, 4367, 10246, 12529, 25624, 5156, 1292, 284, 2709, 24656, 673, 446, 2783, 66337, 35, 12124, 28651, 4813, 498, 330, 543, 5364, 6729, 11237, 8288, 21, 8437, 17, 1158, 40926, 15191, 284, 2709, 24656, 673, 446, 47, 71110, 44914, 498, 330, 2042, 1158, 5775, 10561, 66570, 284, 528, 9835, 24656, 673, 493, 46683, 26505, 71608, 50, 518, 19, 4489, 1527, 18508, 1179, 6969, 3442, 32, 35289, 271, 755, 1925, 4019, 262, 674, 15118, 279, 3290, 1584, 6105, 198, 262, 2897, 284, 4820, 44533, 746, 262, 71647, 284, 473, 36368, 16680, 26566, 25624, 7790, 1292, 28, 12529, 25624, 5156, 1292, 696, 262, 3000, 284, 35318, 64, 1319, 5082, 15191, 17841, 5082, 15191, 11, 40188, 9353, 28, 12529, 25624, 696, 262, 10992, 424, 284, 3000, 5470, 1311, 9104, 424, 21079, 37335, 16160, 74, 794, 2218, 10561, 66570, 3602, 262, 674, 20891, 23365, 17281, 279, 17265, 43617, 2729, 4927, 369, 445, 11237, 82, 198, 262, 27777, 284, 3132, 422, 2897, 749, 1088, 12962, 775, 510, 77609, 23586, 2729, 7646, 3126, 93208, 262, 9507, 76, 284, 507, 657, 3105, 7790, 63596, 11, 27777, 28, 69411, 696, 262, 89596, 284, 20035, 838, 48622, 6521, 31683, 1857, 36621, 76, 28, 657, 76, 11, 8957, 1857, 429, 58404, 498, 10992, 424, 50752, 9104, 424, 11, 471, 10561, 77027, 28, 539, 2897, 18743, 10561, 340, 262, 674, 42966, 4860, 323, 11503, 198, 262, 1418, 3082, 512, 286, 3319, 284, 1988, 5026, 80041, 264, 3319, 25, 14501, 286, 422, 3319, 624, 330, 13966, 4764, 310, 1464, 198, 286, 422, 3319, 17624, 368, 624, 53472, 310, 3136, 271, 286, 674, 2175, 279, 4320, 505, 279, 8957, 198, 286, 1212, 284, 892, 6512, 746, 286, 594, 284, 89596, 10974, 340, 286, 4320, 11, 27437, 284, 594, 681, 1407, 4181, 3132, 422, 2897, 18743, 10561, 775, 594, 681, 2484, 77027, 4532, 286, 842, 284, 892, 6512, 2892, 286, 674, 8377, 279, 1121, 198, 286, 1194, 5026, 77, 1734, 29, 16225, 35503, 286, 1194, 10974, 340, 286, 1194, 40415, 696, 286, 674, 8377, 279, 9959, 8336, 1511, 369, 279, 4320, 198, 286, 369, 2246, 304, 27437, 512, 310, 1194, 5026, 77, 29, 330, 489, 2246, 28644, 1204, 2484, 1365, 489, 13320, 1158, 310, 1194, 15649, 10678, 7647, 696, 755, 4820, 44533, 4019, 262, 6871, 284, 23122, 39066, 30933, 1151, 2039, 38, 2898, 25, 21069, 4860, 311, 701, 9477, 2085, 459, 7757, 3717, 11, 8044, 19273, 364, 985, 279, 2410, 315, 445, 11237, 82, 21537, 262, 6871, 1388, 9202, 22274, 8727, 31874, 498, 6660, 50, 498, 1957, 1151, 4412, 16469, 756, 667, 1520, 1151, 10464, 420, 5292, 311, 11404, 18991, 315, 2592, 9477, 1511, 369, 11503, 49420, 262, 6871, 1388, 9202, 22274, 53314, 39823, 498, 6660, 44, 761, 667, 1957, 1151, 4412, 16469, 756, 667, 1520, 1151, 10464, 420, 5292, 311, 11404, 279, 17265, 43617, 2729, 4927, 369, 445, 11237, 82, 49420, 262, 471, 6871, 4736, 8550, 13407, 333, 1328, 609, 565, 624, 13568, 3902, 21762, 262, 1925, 746
+
+Show whitespace
+Built by dqbd. Created with the generous help from  Diagram.
+
