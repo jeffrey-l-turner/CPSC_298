@@ -1,0 +1,33 @@
+import random
+import string
+
+def random_string(length):
+    """Generate a random string of specified length."""
+    letters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(letters) for _ in range(length))
+
+def fuzz_input(max_length=100):
+    """Generate random fuzz inputs."""
+    # Choose a random length for the input
+    length = random.randint(1, max_length)
+    return random_string(length)
+
+def test_function(func):
+    """Test a function with random fuzz inputs."""
+    num_tests = 1000  # Number of test iterations
+    for _ in range(num_tests):
+        fuzz_data = fuzz_input()
+        try:
+            func(fuzz_data)
+        except Exception as e:
+            print(f"Error caught for input '{fuzz_data}': {e}")
+
+# Example of how to use the fuzzer to test a function
+def example_function(data):
+    """Example function to be tested."""
+    # Let's assume this function expects an integer
+    num = int(data)  # This could raise an exception for non-integer data
+    print(f"Processing number: {num}")
+
+if __name__ == "__main__":
+    test_function(example_function)
