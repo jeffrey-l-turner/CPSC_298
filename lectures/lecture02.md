@@ -8,7 +8,7 @@
     Week in World of AI
     Homework?
 
-## Legacy Software Tool Chains
+## Legacy Software Tools
 - Git
 - Languages & Frameworks
 - Development Environments
