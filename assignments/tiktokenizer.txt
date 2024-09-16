@@ -1,0 +1,41 @@
+tiktokenizer on securestring code:
+<|im_start|>system<|im_sep|># Write a function in Python to handle user login using secure password hashing. Define interfaces for User, LoginCredentials, and HashedPassword. Ensure type safety to prevent common security vulnerabilities like SQL injection.
+
+from typing import Union
+
+class User:
+    def __init__(self, username: str, password: 'HashedPassword'):
+        self.username = username
+        self.password = password
+
+class LoginCredentials:
+    def __init__(self, username: str, password: 'SecureString'):
+        self.username = username
+        self.password = password
+
+class HashedPassword:
+    def __init__(self, hashed_password: str):
+        self.hashed_password = hashed_password
+
+class SecureString:
+    def __init__(self, value: str):
+        self.value = value
+
+def hash_password(password: 'SecureString') -> HashedPassword:
+    # Implement secure password hashing algorithm here
+    # Return the hashed password as an instance of HashedPassword
+    pass
+
+def login(credentials: LoginCredentials, user: User) -> bool:
+    # Implement login logic here
+    # Compare the hashed password of the user with the hashed password of the provided credentials
+    # Return True if the login is successful, False otherwise
+    pass
+
+<|im_end|><|im_start|>user<|im_sep|>write me secure string code<|im_end|><|im_start|>assistant<|im_sep|>
+
+result:
+[100264, 9125, 100266, 2, 9842, 264, 734, 304, 13325, 311, 3790, 1217, 5982, 1701, 9966, 3636, 73455, 13, 19127, 25066, 369, 2724, 11, 8955, 28123, 11, 323, 6668, 291, 4981, 13, 30379, 955, 7296, 311, 5471, 4279, 4868, 52227, 1093, 8029, 26127, 382, 1527, 20061, 1179, 9323, 271, 1058, 2724, 512, 262, 711, 1328, 2381, 3889, 726, 11, 6059, 25, 610, 11, 3636, 25, 364, 6504, 291, 4981, 11290, 286, 659, 12664, 284, 6059, 198, 286, 659, 11891, 284, 3636, 271, 1058, 8955, 28123, 512, 262, 711, 1328, 2381, 3889, 726, 11, 6059, 25, 610, 11, 3636, 25, 364, 50913, 707, 11290, 286, 659, 12664, 284, 6059, 198, 286, 659, 11891, 284, 3636, 271, 1058, 6668, 291, 4981, 512, 262, 711, 1328, 2381, 3889, 726, 11, 51776, 10330, 25, 610, 997, 286, 659, 870, 13883, 10330, 284, 51776, 10330, 271, 1058, 35602, 707, 512, 262, 711, 1328, 2381, 3889, 726, 11, 907, 25, 610, 997, 286, 659, 2894, 284, 907, 271, 755, 5286, 10330, 23608, 25, 364, 50913, 707, 873, 1492, 6668, 291, 4981, 512, 262, 674, 32175, 9966, 3636, 73455, 12384, 1618, 198, 262, 674, 3494, 279, 51776, 3636, 439, 459, 2937, 315, 6668, 291, 4981, 198, 262, 1522, 271, 755, 5982, 86565, 25, 8955, 28123, 11, 1217, 25, 2724, 8, 1492, 1845, 512, 262, 674, 32175, 5982, 12496, 1618, 198, 262, 674, 24702, 279, 51776, 3636, 315, 279, 1217, 449, 279, 51776, 3636, 315, 279, 3984, 16792, 198, 262, 674, 3494, 3082, 422, 279, 5982, 374, 6992, 11, 3641, 6062, 198, 262, 1522, 271, 100265, 100264, 882, 100266, 5040, 757, 9966, 925, 2082, 100265, 100264, 78191, 100266]
+
+explanation:
+LLMs are trained on textual data with locational relationships, which is there tokens/tokenizers come in. Tokenizers break down the input text, in this case the user request, into tokens so that the model can better understand the semantics of the code. The numerical output allows it to take into account spatial information and how tokens might have relationships with one another, contributing towards generating desired output. Coding assistance refers to tools and features that assist developers in writing code more effectively. This can include LLMs which can generate code.
