@@ -1,2 +1,6 @@
 .DS_Store
 .aider*
+*.xml
+*.log
+*.json
+/node_modules
