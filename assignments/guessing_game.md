@@ -1,14 +1,15 @@
-# Week 3 Assignment
+# Assignments
+## Week 3
 #### Description
 Using V0, I created an app that prompots the user to enter a number between 1 and 100, and then has the user keep guessing numbers with feedback after each try until they get the number right.
 #### Output
 Below are an example outputs:
 <div style="text-align: center;">
-    <img src="./guess.png" alt="Example Output - Guess" width="300" />
+    <img src="images/guess.png" alt="Example Output - Guess" width="300" />
 </div>
 
 <div style="text-align: center;">
-    <img src="./correct.png" alt="Example Output - Correct" width="300" />
+    <img src="images/correct.png" alt="Example Output - Correct" width="300" />
 </div>
 
 #### Notes
@@ -25,3 +26,20 @@ Working with .tsx files, I learned that these files are primarily designed for u
 - The out-of-the-box support for TypeScript means that type safety is ensured throughout the project, which is very helpful for avoiding bugs.
 
 Overall, working with .tsx in Next.js is efficient, and using Next.js’s development tools makes the process of developing new React-based applications straightforward. The experience demonstrated how modern frameworks like Next.js streamline creating interactive user interfaces without a complex configuration.
+
+## Week 5
+#### Description
+With the help of an LLM, I created a new dropdown to select the difficulty of the number guessing game. This effectively changes the possible range of numbers.
+#### Output
+
+Below are example outputs:
+<div style="text-align: center;">
+    <img src="images/settings.png" alt="Example Output - Dropdown" width="300" />
+<div style="text-align: center;">
+    <img src="images/week5_correct.png" alt="Example Output - Correct" width="300" />
+</div>
+
+
+
+
+
