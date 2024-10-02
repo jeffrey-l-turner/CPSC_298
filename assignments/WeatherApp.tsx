@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { useState } from 'react';
-import { useWeatherData } from '../rc/hooks/useWeatherData';
 import { Input } from "../rc/components/ui/input"
 import { Button } from "../rc/components/ui/button"
 import { Card, CardContent } from "../rc/components/ui/card"
@@ -10,43 +9,6 @@ import { Switch } from "../rc/components/ui/switch"
 import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
 type TemperatureUnit = 'C' | 'F'
 
-const useWeatherData = (city: string) => {
-  const [weather, setWeather] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (city) {
-      setLoading(true)
-      setError(null)
-      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=YOUR_API_KEY`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('City not found')
-          }
-          return response.json()
-        })
-        .then(data => {
-          setWeather({
-            current: {
-              temp: data.main.temp,
-              humidity: data.main.humidity,
-              windSpeed: data.wind.speed,
-              description: data.weather[0].description
-            },
-            forecast: [] // You can add forecast data here if needed
-          })
-          setLoading(false)
-        })
-        .catch(err => {
-          setError(err.message)
-          setLoading(false)
-        })
-    }
-  }, [city])
-
-  return { weather, loading, error }
-}
 
 export default function WeatherApp() {
   const [city, setCity] = useState('')
