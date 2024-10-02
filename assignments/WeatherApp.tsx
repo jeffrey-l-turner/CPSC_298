@@ -50,6 +50,7 @@ export default function WeatherApp() {
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
+  return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-teal-100 to-blue-200'} p-4 sm:p-8`}>
       <Card className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm">
         <CardContent className="p-6">
