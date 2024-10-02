@@ -1,42 +1,21 @@
 'use client'
 import React from 'react'
-import { useState } from 'react'
+import { useState } from 'react';
+import { useWeatherData } from '../rc/hooks/useWeatherData';
 import { Input } from "../rc/components/ui/input"
 import { Button } from "../rc/components/ui/button"
 import { Card, CardContent } from "../rc/components/ui/card"
 import { Switch } from "../rc/components/ui/switch"
 import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
 
-// Mock weather data (replace with actual API call in a real application)
-const mockWeatherData = {
-  current: {
-    temp: 22,
-    humidity: 60,
-    windSpeed: 5,
-    description: 'Partly cloudy'
-  },
-  forecast: [
-    { day: 'Mon', temp: 23, icon: 'sun' },
-    { day: 'Tue', temp: 25, icon: 'sun' },
-    { day: 'Wed', temp: 21, icon: 'cloud' },
-    { day: 'Thu', temp: 20, icon: 'cloud' },
-    { day: 'Fri', temp: 22, icon: 'sun' },
-  ]
-}
 
 type TemperatureUnit = 'C' | 'F'
 
 export default function WeatherApp() {
   const [city, setCity] = useState('')
-  const [weather, setWeather] = useState(mockWeatherData)
+  const { weather, loading, error } = useWeatherData(city);
   const [unit, setUnit] = useState<TemperatureUnit>('C')
 
-  const handleSearch = () => {
-    // In a real app, you would fetch weather data here
-    console.log('Searching for:', city)
-    // For now, we'll just use our mock data
-    setWeather(mockWeatherData)
-  }
 
   const convertTemp = (temp: number): number => {
     if (unit === 'F') {
@@ -51,7 +30,9 @@ export default function WeatherApp() {
         <CardContent className="p-6">
           <h1 className="text-3xl font-bold text-center text-teal-800 mb-6">Weather Forecast</h1>
           
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          {loading && <p className="text-center mb-4">Loading...</p>}
+          <div className={`flex flex-col sm:flex-row gap-4 mb-6 ${loading ? 'opacity-50' : ''}`}>
             <Input
               type="text"
               placeholder="Enter city name"
