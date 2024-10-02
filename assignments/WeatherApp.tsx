@@ -1,22 +1,56 @@
 'use client'
-import React from 'react'
-import { hello } from './hello';
-import { useState } from 'react';
-import { useWeatherData } from '../rc/hooks/useWeatherData';
-import { Input } from "../rc/components/ui/input"
-import { Button } from "../rc/components/ui/button"
-import { Card, CardContent } from "../rc/components/ui/card"
-import { Switch } from "../rc/components/ui/switch"
-import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
 
+import React, { useState, useEffect } from 'react'
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
+import { Cloud, Droplets, Search, Sun, Wind } from 'lucide-react'
 
 type TemperatureUnit = 'C' | 'F'
 
+// Mock weather data
+const mockWeatherData = {
+  current: {
+    temp: 22,
+    humidity: 60,
+    windSpeed: 5,
+    description: 'Partly cloudy'
+  },
+  forecast: [
+    { day: 'Mon', temp: 23, icon: 'sun' },
+    { day: 'Tue', temp: 25, icon: 'sun' },
+    { day: 'Wed', temp: 21, icon: 'cloud' },
+    { day: 'Thu', temp: 20, icon: 'cloud' },
+    { day: 'Fri', temp: 22, icon: 'sun' },
+  ]
+}
+
+// Simple useWeatherData hook
+const useWeatherData = (city: string) => {
+  const [weather, setWeather] = useState(mockWeatherData)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (city) {
+      setLoading(true)
+      setError(null)
+      // Simulate API call
+      setTimeout(() => {
+        setWeather(mockWeatherData)
+        setLoading(false)
+      }, 1000)
+    }
+  }, [city])
+
+  return { weather, loading, error }
+}
+
 export default function WeatherApp() {
   const [city, setCity] = useState('')
-  const { weather, loading, error } = useWeatherData(city);
+  const { weather, loading, error } = useWeatherData(city)
   const [unit, setUnit] = useState<TemperatureUnit>('C')
-
 
   const convertTemp = (temp: number): number => {
     if (unit === 'F') {
@@ -27,9 +61,10 @@ export default function WeatherApp() {
 
   const handleSearch = () => {
     if (city.trim() === '') {
-      alert('Please enter a city name');
+      alert('Please enter a city name')
     }
-  };
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-100 to-blue-200 p-4 sm:p-8">
       <Card className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm">
@@ -64,46 +99,38 @@ export default function WeatherApp() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {weather && (
-              <>
-                <div className="flex items-center justify-between bg-teal-50 p-4 rounded-lg">
-                  <div>
-                    <p className="text-5xl font-bold text-teal-800">{convertTemp(weather.current.temp)}°{unit}</p>
-                    <p className="text-teal-600">{weather.current.description}</p>
-                  </div>
-                  <Sun className="h-16 w-16 text-yellow-500" />
-                </div>
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="flex items-center text-blue-800 mb-2">
-                    <Droplets className="mr-2 h-5 w-5" /> 
-                    <span>Humidity: {weather.current.humidity}%</span>
-                  </div>
-                  <div className="flex items-center text-blue-800">
-                    <Wind className="mr-2 h-5 w-5" /> 
-                    <span>Wind: {weather.current.windSpeed} m/s</span>
-                  </div>
-                </div>
-              </>
-            )}
+            <div className="flex items-center justify-between bg-teal-50 p-4 rounded-lg">
+              <div>
+                <p className="text-5xl font-bold text-teal-800">{convertTemp(weather.current.temp)}°{unit}</p>
+                <p className="text-teal-600">{weather.current.description}</p>
+              </div>
+              <Sun className="h-16 w-16 text-yellow-500" />
+            </div>
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="flex items-center text-blue-800 mb-2">
+                <Droplets className="mr-2 h-5 w-5" /> 
+                <span>Humidity: {weather.current.humidity}%</span>
+              </div>
+              <div className="flex items-center text-blue-800">
+                <Wind className="mr-2 h-5 w-5" /> 
+                <span>Wind: {weather.current.windSpeed} m/s</span>
+              </div>
+            </div>
           </div>
 
-          {weather && (
-            <>
-              <h2 className="text-2xl font-semibold text-teal-800 mb-4">5-Day Forecast</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                {weather.forecast.map((day, index) => (
-                  <div key={index} className="bg-white p-4 rounded-lg text-center shadow-sm">
-                    <p className="font-semibold text-teal-800">{day.day}</p>
-                    {day.icon === 'sun' ? 
-                      <Sun className="mx-auto h-8 w-8 text-yellow-500 my-2" /> : 
-                      <Cloud className="mx-auto h-8 w-8 text-gray-400 my-2" />
-                    }
-                    <p className="text-teal-600">{convertTemp(day.temp)}°{unit}</p>
-                  </div>
-                ))}
+          <h2 className="text-2xl font-semibold text-teal-800 mb-4">5-Day Forecast</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+            {weather.forecast.map((day, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg text-center shadow-sm">
+                <p className="font-semibold text-teal-800">{day.day}</p>
+                {day.icon === 'sun' ? 
+                  <Sun className="mx-auto h-8 w-8 text-yellow-500 my-2" /> : 
+                  <Cloud className="mx-auto h-8 w-8 text-gray-400 my-2" />
+                }
+                <p className="text-teal-600">{convertTemp(day.temp)}°{unit}</p>
               </div>
-            </>
-          )}
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>
