@@ -57,7 +57,9 @@ export default function WeatherApp() {
       return Math.round((temp * 9) / 5 + 32)
     }
     return Math.round(temp)
-    if (city.trim() !== '') {
+    if (city.trim() === '') {
+      alert('Please enter a city name')
+    } else {
       setCity(city.trim());
     }
   }
