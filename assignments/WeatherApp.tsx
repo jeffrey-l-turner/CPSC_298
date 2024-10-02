@@ -63,7 +63,6 @@ export default function WeatherApp() {
       setCity(city.trim());
     }
   }
-  }
 
   const handleSearch = () => {
     if (city.trim() === '') {
