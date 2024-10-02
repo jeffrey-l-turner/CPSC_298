@@ -1,88 +1,114 @@
-'use client'
+use client'
 
-import React, { useState, useEffect } from 'react';
-import { Sun, Moon } from 'lucide-react';
-import axios from 'axios';
-import { Input } from "../rc/components/ui/input"
-import { Button } from "../rc/components/ui/button"
-import { Card, CardContent } from "../rc/components/ui/card"
-import { Switch } from "../rc/components/ui/switch"
-import { Sun, Moon } from 'lucide-react'
-type WeatherData = {
-  temperature: number;
-  description: string;
-  icon: string;
-};
+import { useState } from 'react'
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
+import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
 
-type TemperatureUnit = 'C' | 'F';
+// Mock weather data (replace with actual API call in a real application)
+const mockWeatherData = {
+  current: {
+    temp: 22,
+    humidity: 60,
+    windSpeed: 5,
+    description: 'Partly cloudy'
+  },
+  forecast: [
+    { day: 'Mon', temp: 23, icon: 'sun' },
+    { day: 'Tue', temp: 25, icon: 'sun' },
+    { day: 'Wed', temp: 21, icon: 'cloud' },
+    { day: 'Thu', temp: 20, icon: 'cloud' },
+    { day: 'Fri', temp: 22, icon: 'sun' },
+  ]
+}
 
+type TemperatureUnit = 'C' | 'F'
 
 export default function WeatherApp() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [city, setCity] = useState('New York');
-  const [unit, setUnit] = useState<TemperatureUnit>('C');
+  const [city, setCity] = useState('')
+  const [weather, setWeather] = useState(mockWeatherData)
+  const [unit, setUnit] = useState<TemperatureUnit>('C')
 
-  useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit === 'C' ? 'metric' : 'imperial'}&appid=YOUR_API_KEY`);
-        const data = response.data;
-        setWeatherData({
-          temperature: data.main.temp,
-          description: data.weather[0].description,
-          icon: data.weather[0].icon,
-        });
-      } catch (error) {
-        console.error('Error fetching weather data:', error);
-      }
-    };
+  const handleSearch = () => {
+    // In a real app, you would fetch weather data here
+    console.log('Searching for:', city)
+    // For now, we'll just use our mock data
+    setWeather(mockWeatherData)
+  }
 
-    fetchWeather();
-  }, [city, unit]);
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
+  const convertTemp = (temp: number): number => {
+    if (unit === 'F') {
+      return Math.round((temp * 9) / 5 + 32)
+    }
+    return Math.round(temp)
+  }
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} p-4 sm:p-8`}>
+    <div className="min-h-screen bg-gradient-to-br from-teal-100 to-blue-200 p-4 sm:p-8">
       <Card className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm">
         <CardContent className="p-6">
-          <h1 className="text-3xl font-bold text-center mb-6">Weather App</h1>
-          <div className="flex justify-center items-center mb-6">
-            <Button onClick={toggleTheme} className="bg-teal-600 hover:bg-teal-700">
-              {darkMode ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-              {darkMode ? 'Light Mode' : 'Dark Mode'}
-            </Button>
-          </div>
-            <Button onClick={toggleTheme} className="bg-teal-600 hover:bg-teal-700">
-              {darkMode ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-              {darkMode ? 'Light Mode' : 'Dark Mode'}
-            </Button>
-          </div>
-          <div className="flex justify-center items-center mb-6">
+          <h1 className="text-3xl font-bold text-center text-teal-800 mb-6">Weather Forecast</h1>
+
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <Input
               type="text"
+              placeholder="Enter city name"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              placeholder="Enter city"
-              className="mr-2"
+              className="flex-grow"
             />
-            <Switch
-              checked={unit === 'C'}
-              onCheckedChange={() => setUnit(unit === 'C' ? 'F' : 'C')}
-              className="mr-2"
-            />
-            <span>{unit === 'C' ? 'Celsius' : 'Fahrenheit'}</span>
+            <Button onClick={handleSearch} className="bg-teal-600 hover:bg-teal-700">
+              <Search className="mr-2 h-4 w-4" /> Search
+            </Button>
           </div>
-          {weatherData && (
-            <div className="text-center">
-              <img src={`http://openweathermap.org/img/wn/${weatherData.icon}.png`} alt="Weather icon" />
-              <p className="text-xl">{weatherData.temperature}°{unit}</p>
-              <p className="text-sm capitalize">{weatherData.description}</p>
+
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold text-teal-800">Current Weather</h2>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-teal-800">°C</span>
+              <Switch
+                checked={unit === 'F'}
+                onCheckedChange={() => setUnit(unit === 'C' ? 'F' : 'C')}
+              />
+              <span className="text-sm font-medium text-teal-800">°F</span>
             </div>
-          )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="flex items-center justify-between bg-teal-50 p-4 rounded-lg">
+              <div>
+                <p className="text-5xl font-bold text-teal-800">{convertTemp(weather.current.temp)}°{unit}</p>
+                <p className="text-teal-600">{weather.current.description}</p>
+              </div>
+              <Sun className="h-16 w-16 text-yellow-500" />
+            </div>
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="flex items-center text-blue-800 mb-2">
+                <Droplets className="mr-2 h-5 w-5" /> 
+                <span>Humidity: {weather.current.humidity}%</span>
+              </div>
+              <div className="flex items-center text-blue-800">
+                <Wind className="mr-2 h-5 w-5" /> 
+                <span>Wind: {weather.current.windSpeed} m/s</span>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="text-2xl font-semibold text-teal-800 mb-4">5-Day Forecast</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+            {weather.forecast.map((day, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg text-center shadow-sm">
+                <p className="font-semibold text-teal-800">{day.day}</p>
+                {day.icon === 'sun' ? 
+                  <Sun className="mx-auto h-8 w-8 text-yellow-500 my-2" /> : 
+                  <Cloud className="mx-auto h-8 w-8 text-gray-400 my-2" />
+                }
+                <p className="text-teal-600">{convertTemp(day.temp)}°{unit}</p>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>
