@@ -2,8 +2,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Bird, CheckSquare, PlusCircle, Menu } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function LandingPage() {
+  // State to manage the email input for sign up
+  const [email, setEmail] = useState("")
+
+  // Function to handle the email input change
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+  }
+
+  // Function to handle form submission
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    // Here you can add functionality to send the email to your server
+    alert(`Sign-up initiated for: ${email}`)
+    setEmail("") // Clear the input after submission
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-green-100 to-green-200">
       <header className="w-full py-4 px-6 bg-white shadow-md">
@@ -83,10 +100,15 @@ export default function LandingPage() {
             <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-lg">
               <h2 className="text-3xl font-bold text-green-800 mb-4">Your Digital Ranch Awaits</h2>
               <p className="text-green-700 mb-4">Sign up now to start managing your ranch effortlessly</p>
-              <div className="flex space-x-4">
-                <Input placeholder="Enter your email" className="flex-grow" />
+              <form onSubmit={handleSubmit} className="flex space-x-4">
+                <Input 
+                  value={email}
+                  onChange={handleEmailChange} // Handle input change
+                  placeholder="Enter your email" 
+                  className="flex-grow" 
+                />
                 <Button className="bg-green-600 hover:bg-green-700 text-white">Sign Up</Button>
-              </div>
+              </form>
             </div>
           </div>
         </section>
