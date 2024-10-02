@@ -29,6 +29,7 @@ export default function WeatherApp() {
       alert('Please enter a city name');
     }
   };
+  return (
     <div className="min-h-screen bg-gradient-to-br from-teal-100 to-blue-200 p-4 sm:p-8">
       <Card className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm">
         <CardContent className="p-6">
