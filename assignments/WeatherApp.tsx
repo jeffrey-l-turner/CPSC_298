@@ -11,22 +11,6 @@ type TemperatureUnit = 'C' | 'F'
 
 
 export default function WeatherApp() {
-  const [city, setCity] = useState('')
-  const { weather, loading, error } = useWeatherData(city)
-  const [unit, setUnit] = useState<TemperatureUnit>('C')
-
-  const convertTemp = (temp: number): number => {
-    if (unit === 'F') {
-      return Math.round((temp * 9) / 5 + 32)
-    }
-    return Math.round(temp)
-    if (city.trim() === '') {
-      alert('Please enter a city name')
-    } else {
-      setCity(city.trim());
-    }
-  }
-
   const useWeatherData = (city: string) => {
     const [weather, setWeather] = useState<any>({ current: {}, forecast: [] });
     const [loading, setLoading] = useState(false);
@@ -63,6 +47,21 @@ export default function WeatherApp() {
     }, [city]);
 
     return { weather, loading, error };
+  }
+  const [city, setCity] = useState('')
+  const { weather, loading, error } = useWeatherData(city)
+  const [unit, setUnit] = useState<TemperatureUnit>('C')
+
+  const convertTemp = (temp: number): number => {
+    if (unit === 'F') {
+      return Math.round((temp * 9) / 5 + 32)
+    }
+    return Math.round(temp)
+    if (city.trim() === '') {
+      alert('Please enter a city name')
+    } else {
+      setCity(city.trim());
+    }
   }
   }
 
