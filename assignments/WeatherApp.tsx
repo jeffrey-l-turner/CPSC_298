@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Input } from "../components/ui/input"
-import { Button } from "../components/ui/button"
-import { Card, CardContent } from "../components/ui/card"
-import { Switch } from "../components/ui/switch"
+import { Input } from "../rc/components/ui/input"
+import { Button } from "../rc/components/ui/button"
+import { Card, CardContent } from "../rc/components/ui/card"
+import { Switch } from "../rc/components/ui/switch"
 import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
 
 // Mock weather data (replace with actual API call in a real application)
