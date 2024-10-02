@@ -13,6 +13,7 @@ const mockWeatherData = {
     temp: 22,
     humidity: 60,
     windSpeed: 5,
+    chanceOfRain: 30, // Hardcoded percentage chance of rain
     description: 'Partly cloudy'
   },
   forecast: [
@@ -90,6 +91,10 @@ export default function WeatherApp() {
               <div>
                 <p className="text-5xl font-bold text-teal-800">{convertTemp(weather.current.temp)}°{unit}</p>
                 <p className="text-teal-600">{weather.current.description}</p>
+              </div>
+              <div className="flex items-center text-blue-800 mt-2">
+                <Cloud className="mr-2 h-5 w-5" />
+                <span>Chance of Rain: {weather.current.chanceOfRain}%</span>
               </div>
               <Sun className="h-16 w-16 text-yellow-500" />
             </div>
