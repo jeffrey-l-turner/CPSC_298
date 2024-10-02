@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from "../rc/components/ui/input"
 import { Button } from "../rc/components/ui/button"
 import { Card, CardContent } from "../rc/components/ui/card"
@@ -25,6 +25,44 @@ export default function WeatherApp() {
     } else {
       setCity(city.trim());
     }
+  }
+
+  const useWeatherData = (city: string) => {
+    const [weather, setWeather] = useState<any>({ current: {}, forecast: [] });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+      if (city) {
+        setLoading(true);
+        setError(null);
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=YOUR_API_KEY`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('City not found');
+            }
+            return response.json();
+          })
+          .then(data => {
+            setWeather({
+              current: {
+                temp: data.main.temp,
+                humidity: data.main.humidity,
+                windSpeed: data.wind.speed,
+                description: data.weather[0].description
+              },
+              forecast: [] // You can add forecast data here if needed
+            });
+            setLoading(false);
+          })
+          .catch(err => {
+            setError(err.message);
+            setLoading(false);
+          });
+      }
+    }, [city]);
+
+    return { weather, loading, error };
   }
   }
 
