@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Cloud, Droplets, Search, Sun, Wind } from 'lucide-react'
-
+import React from 'react'
+import { useState } from 'react';
+import { useWeatherData } from '../rc/hooks/useWeatherData';
+import { Input } from "../rc/components/ui/input"
+import { Button } from "../rc/components/ui/button"
+import { Card, CardContent } from "../rc/components/ui/card"
+import { Switch } from "../rc/components/ui/switch"
+import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
 type TemperatureUnit = 'C' | 'F'
 
 const useWeatherData = (city: string) => {
