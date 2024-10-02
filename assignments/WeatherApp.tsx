@@ -9,26 +9,8 @@ import { Cloud, Droplets, Search, Sun, Wind } from 'lucide-react'
 
 type TemperatureUnit = 'C' | 'F'
 
-// Mock weather data
-const mockWeatherData = {
-  current: {
-    temp: 22,
-    humidity: 60,
-    windSpeed: 5,
-    description: 'Partly cloudy'
-  },
-  forecast: [
-    { day: 'Mon', temp: 23, icon: 'sun' },
-    { day: 'Tue', temp: 25, icon: 'sun' },
-    { day: 'Wed', temp: 21, icon: 'cloud' },
-    { day: 'Thu', temp: 20, icon: 'cloud' },
-    { day: 'Fri', temp: 22, icon: 'sun' },
-  ]
-}
-
-// Simple useWeatherData hook
 const useWeatherData = (city: string) => {
-  const [weather, setWeather] = useState(mockWeatherData)
+  const [weather, setWeather] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -36,11 +18,29 @@ const useWeatherData = (city: string) => {
     if (city) {
       setLoading(true)
       setError(null)
-      // Simulate API call
-      setTimeout(() => {
-        setWeather(mockWeatherData)
-        setLoading(false)
-      }, 1000)
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=YOUR_API_KEY`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('City not found')
+          }
+          return response.json()
+        })
+        .then(data => {
+          setWeather({
+            current: {
+              temp: data.main.temp,
+              humidity: data.main.humidity,
+              windSpeed: data.wind.speed,
+              description: data.weather[0].description
+            },
+            forecast: [] // You can add forecast data here if needed
+          })
+          setLoading(false)
+        })
+        .catch(err => {
+          setError(err.message)
+          setLoading(false)
+        })
     }
   }, [city])
 
