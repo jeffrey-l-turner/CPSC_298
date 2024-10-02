@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { Cloud, Droplets, Search, Sun, Thermometer, Wind } from 'lucide-react'
+import { Cloud, Droplets, Search, Sun, Thermometer, Wind, Moon } from 'lucide-react'
 
 // Mock weather data (replace with actual API call in a real application)
 const mockWeatherData = {
@@ -27,7 +27,8 @@ const mockWeatherData = {
 type TemperatureUnit = 'C' | 'F'
 
 export default function WeatherApp() {
-  const [city, setCity] = useState('')
+  const [city, setCity] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
   const [weather, setWeather] = useState(mockWeatherData)
   const [unit, setUnit] = useState<TemperatureUnit>('C')
 
@@ -45,11 +46,19 @@ export default function WeatherApp() {
     return Math.round(temp)
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-100 to-blue-200 p-4 sm:p-8">
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-teal-100 to-blue-200'} p-4 sm:p-8`}>
       <Card className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm">
         <CardContent className="p-6">
-          <h1 className="text-3xl font-bold text-center text-teal-800 mb-6">Weather Forecast</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold text-center text-teal-800">Weather Forecast</h1>
+            <Button onClick={toggleTheme} className="bg-teal-600 hover:bg-teal-700">
+              {darkMode ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+              {darkMode ? 'Light Mode' : 'Dark Mode'}
+            </Button>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <Input
