@@ -63,38 +63,46 @@ export default function WeatherApp() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="flex items-center justify-between bg-teal-50 p-4 rounded-lg">
-              <div>
-                <p className="text-5xl font-bold text-teal-800">{convertTemp(weather.current.temp)}°{unit}</p>
-                <p className="text-teal-600">{weather.current.description}</p>
-              </div>
-              <Sun className="h-16 w-16 text-yellow-500" />
-            </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center text-blue-800 mb-2">
-                <Droplets className="mr-2 h-5 w-5" /> 
-                <span>Humidity: {weather.current.humidity}%</span>
-              </div>
-              <div className="flex items-center text-blue-800">
-                <Wind className="mr-2 h-5 w-5" /> 
-                <span>Wind: {weather.current.windSpeed} m/s</span>
-              </div>
-            </div>
+            {weather && (
+              <>
+                <div className="flex items-center justify-between bg-teal-50 p-4 rounded-lg">
+                  <div>
+                    <p className="text-5xl font-bold text-teal-800">{convertTemp(weather.current.temp)}°{unit}</p>
+                    <p className="text-teal-600">{weather.current.description}</p>
+                  </div>
+                  <Sun className="h-16 w-16 text-yellow-500" />
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="flex items-center text-blue-800 mb-2">
+                    <Droplets className="mr-2 h-5 w-5" /> 
+                    <span>Humidity: {weather.current.humidity}%</span>
+                  </div>
+                  <div className="flex items-center text-blue-800">
+                    <Wind className="mr-2 h-5 w-5" /> 
+                    <span>Wind: {weather.current.windSpeed} m/s</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
-          <h2 className="text-2xl font-semibold text-teal-800 mb-4">5-Day Forecast</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-            {weather.forecast.map((day, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg text-center shadow-sm">
-                <p className="font-semibold text-teal-800">{day.day}</p>
-                {day.icon === 'sun' ? 
-                  <Sun className="mx-auto h-8 w-8 text-yellow-500 my-2" /> : 
-                  <Cloud className="mx-auto h-8 w-8 text-gray-400 my-2" />
-                }
-                <p className="text-teal-600">{convertTemp(day.temp)}°{unit}</p>
+          {weather && (
+            <>
+              <h2 className="text-2xl font-semibold text-teal-800 mb-4">5-Day Forecast</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                {weather.forecast.map((day, index) => (
+                  <div key={index} className="bg-white p-4 rounded-lg text-center shadow-sm">
+                    <p className="font-semibold text-teal-800">{day.day}</p>
+                    {day.icon === 'sun' ? 
+                      <Sun className="mx-auto h-8 w-8 text-yellow-500 my-2" /> : 
+                      <Cloud className="mx-auto h-8 w-8 text-gray-400 my-2" />
+                    }
+                    <p className="text-teal-600">{convertTemp(day.temp)}°{unit}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
