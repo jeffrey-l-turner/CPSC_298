@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import { hello } from './hello';
 import { useState } from 'react';
 import { useWeatherData } from '../rc/hooks/useWeatherData';
 import { Input } from "../rc/components/ui/input"
