@@ -4,6 +4,7 @@ import { Bird, CheckSquare, PlusCircle, Menu } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
+
 export default function LandingPage() {
   // State to manage the email input for sign up
   const [email, setEmail] = useState("")
