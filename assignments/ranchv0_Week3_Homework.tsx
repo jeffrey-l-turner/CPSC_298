@@ -6,8 +6,6 @@ import { useState } from "react"
 
 
 
-
-
 export default function LandingPage() {
   // State to manage the email input for sign up
   const [email, setEmail] = useState("")
