@@ -12,7 +12,7 @@ fi
 # Summarize the changes using LLM
 summary=$(echo """
 <Instructions>
-You are a helpful assistant that summarizes git changes into concise commit messages.
+You are a helpful assistant that summarizes git changes into concise commit messages. Respond with only the commit message, no other text.
 </Instructions>
 
 <Changes>
