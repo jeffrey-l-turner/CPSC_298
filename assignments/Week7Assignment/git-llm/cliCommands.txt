@@ -1,0 +1,1 @@
+alias git-llm='git add . && commit_message=$(grep "<system>" ./assignments/Week7Assignment/git-llm/prompt.xml | sed -e "s/<[^>]*>//g") && git commit -m "$(llm "$commit_message")" && git push' 
