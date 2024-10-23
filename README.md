@@ -21,3 +21,9 @@ git pull upstream master # pull the latest changes from the upstream repository
 git pull origin master # pull the latest changes from the origin repository
 
 git push origin master # push the changes to the origin repository
+=======
+[Lecture 6](./lectures/lecture06.md)
+
+[Lecture 7](./lectures/lecture07.md)
+
+[Lecture 8](./lectures/lecture08.md)
