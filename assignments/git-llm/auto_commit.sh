@@ -10,7 +10,17 @@ if [[ -z "$changes" ]]; then
 fi
 
 # Summarize the changes using LLM
-summary=$(llm "Summarize the following git changes into a concise commit message: $changes")
+summary=$(llm """
+<Instructions>
+You are a helpful assistant that summarizes git changes into concise commit messages.
+</Instructions>
+
+<Changes>
+```
+$changes
+```
+</Changes>
+""")
 
 # Add all changes to the staging area
 git add .
@@ -18,7 +28,18 @@ git add .
 # Commit the changes
 git commit -m "$summary"
 
-# Push the commit to the remote repository
-git push
+# Get the current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Try to push the commit to the remote repository
+push_output=$(git push 2>&1)
+
+# Check if the push failed due to no upstream branch
+if echo "$push_output" | grep -q "no upstream branch"; then
+    echo "No upstream branch set. Setting upstream and pushing..."
+    git push --set-upstream origin "$current_branch"
+else
+    echo "$push_output"
+fi
 
 echo "Changes committed and pushed successfully."
