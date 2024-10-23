@@ -10,17 +10,15 @@ if [[ -z "$changes" ]]; then
 fi
 
 # Summarize the changes using LLM
-summary=$(llm """
+summary=$(echo """
 <Instructions>
 You are a helpful assistant that summarizes git changes into concise commit messages.
 </Instructions>
 
 <Changes>
-```
 $changes
-```
 </Changes>
-""")
+""" | llm)
 
 # Add all changes to the staging area
 git add .
