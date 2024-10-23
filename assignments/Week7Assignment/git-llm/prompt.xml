@@ -1,3 +1,4 @@
 <prompt>
-   <system>I just updated the cliCommands.txt file with the correct alias</system>
+   <system>Create a commit message for my github commit, here is short description of what I did:
+   I just updated the cliCommands.txt file with the correct alias</system>
 </prompt>
