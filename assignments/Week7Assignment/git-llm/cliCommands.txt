@@ -1,0 +1,1 @@
+alias git-llm='git add . && commit_message=$(grep "<system>" assignments/git-llm/prompt.xml | sed -e "s/<[^>]*>//g") && git commit -m "$(llm --system "$commit_message" --model gpt-4 --save summarize)" && git push'
