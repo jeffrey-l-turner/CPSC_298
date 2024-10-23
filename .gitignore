@@ -1,3 +1,6 @@
 .DS_Store
 .aider*
+.next/
+node_modules
 student_roster.csv
+venv/
