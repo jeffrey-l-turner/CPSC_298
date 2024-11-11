@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Path to the XML prompt file
+prompt_file="~/projects/assignments/git-llm/commit_prompt.xml"
+
+# Extract system message and model info from XML
+system_message=$(xmllint --xpath "string(//system)" "$prompt_file")
+model=$(xmllint --xpath "string(//model)" "$prompt_file")
+
+# Generate commit message using llm
+commit_message=$(llm --system "$system_message" --model "$model")
+
+# Use generated commit message
+git commit -m "$commit_message"
