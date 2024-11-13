@@ -4,3 +4,4 @@
 node_modules
 student_roster.csv
 venv/
+.env
