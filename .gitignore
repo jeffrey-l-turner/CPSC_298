@@ -2,6 +2,6 @@
 .aider*
 .next/
 node_modules
-student_roster.csv
+.env
 venv/
 .env
