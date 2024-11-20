@@ -40,3 +40,5 @@ venv\Scripts\activate (windows)
 [Lecture 11](./lectures/lecture11.md)
 
 [Lecture 12](./lectures/lecture12.md)
+
+[Lecture 13](./lectures/lecture13.md)
