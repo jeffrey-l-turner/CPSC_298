@@ -1,4 +1,4 @@
-# AutoGen Development Framework
+# AutoGen Development Framework (Yellow Group)
 
 # Contributors Team Violet
 
@@ -13,6 +13,15 @@ A sophisticated multi-agent development framework built on AutoGen that automate
 ![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![AutoGen 0.4](https://img.shields.io/badge/AutoGen-0.4-green.svg)
+
+## Authors
+
+- Nataniel Farzan (Lead)
+- Drew Floyd (Product Owner)
+- Jonathan Vergonio (QA)
+- Ryan Jewik (Dev)
+- Ben Fellows (Dev)
+- Jennifer Merida (Dev)
 
 ## 🌟 Features
 
@@ -41,23 +50,27 @@ A sophisticated multi-agent development framework built on AutoGen that automate
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/autogen-dev-framework.git
 cd autogen-dev-framework
 ```
 
 2. Create and activate virtual environment:
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 ```
 
 3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 4. Configure your environment:
+
 ```bash
 cp .env.example .env
 # Edit .env with your OpenAI API key
@@ -72,14 +85,14 @@ from src.agents.team import DevelopmentTeam
 async def main():
     # Initialize the development team
     team = DevelopmentTeam()
-    
+
     # Define your coding task
     task = """
     Create a function that:
     1. Takes a list of numbers as input
     2. Returns the sum of all even numbers
     """
-    
+
     # Let the team solve the task
     await team.solve_task(task)
 
@@ -90,12 +103,14 @@ if __name__ == "__main__":
 ## 📖 Example Workflows
 
 ### 1. Basic Function Implementation
+
 ```python
 task = "Implement a function to calculate the factorial of a number"
 await team.solve_task(task)
 ```
 
 ### 2. Data Structure Implementation
+
 ```python
 task = """
 Create a binary search tree implementation with the following methods:
@@ -108,6 +123,7 @@ await team.solve_task(task)
 ```
 
 ### 3. Algorithm Development
+
 ```python
 task = """
 Implement a sorting algorithm that:
@@ -121,6 +137,7 @@ await team.solve_task(task)
 ## 🔧 Configuration
 
 ### Custom Model Configuration
+
 ```python
 from src.agents.team import DevelopmentTeam
 from config import CustomModelConfig
@@ -135,6 +152,7 @@ team = DevelopmentTeam(
 ```
 
 ### Custom Tools Integration
+
 ```python
 from src.tools import CustomCodeExecutor
 
@@ -158,18 +176,21 @@ graph TD
 ## 🔍 Advanced Features
 
 ### Code Analysis
+
 ```python
 # Get detailed code analysis
 analysis = await team.analyze_code(code_snippet)
 ```
 
 ### Test Generation
+
 ```python
 # Generate comprehensive test suite
 tests = await team.generate_tests(implementation)
 ```
 
 ### Performance Optimization
+
 ```python
 # Optimize existing implementation
 optimized_code = await team.optimize_code(
@@ -181,11 +202,13 @@ optimized_code = await team.optimize_code(
 ## 🛠️ Development
 
 ### Running Tests
+
 ```bash
 pytest src/tests/
 ```
 
 ### Code Style
+
 ```bash
 # Format code
 black src/
@@ -197,6 +220,7 @@ mypy src/
 ## 📚 Documentation
 
 For detailed documentation, see:
+
 - [Technical Architecture](docs/architecture.md)
 - [API Reference](docs/api.md)
 - [Configuration Guide](docs/configuration.md)
@@ -228,4 +252,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Report Issues: [Issue Tracker](https://github.com/yourusername/autogen-dev-framework/issues)
 
 ---
+
 ⭐ Star us on GitHub — it motivates us to make the framework even better!
