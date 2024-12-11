@@ -1,66 +1,32 @@
+import openai
+from agent1 import get_News
 
-# agents/agent2.py
+def summarize_article(article):
+    # Check if the article has sufficient content
+    if not article or len(article.split()) < 10:
+        return "Not enough content available to summarize."
 
-import logging
-import os
-import requests
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-logging.basicConfig(level=logging.INFO)
-
-def calculate(operation, a, b):
     try:
-        a = float(a)
-        b = float(b)
-        if operation == 'add':
-            result = a + b
-        elif operation == 'subtract':
-            result = a - b
-        elif operation == 'multiply':
-            result = a * b
-        elif operation == 'divide':
-            result = a / b if b != 0 else 'Infinity'
-        else:
-            logging.error("Unsupported operation.")
-            return {'error': 'Unsupported operation.'}
-        result_data = {'operation': operation, 'a': a, 'b': b, 'result': result}
-        logging.info(f"Calculation result: {result_data}")
-        return result_data
-    except ValueError:
-        logging.error("Invalid numbers provided.")
-        return {'error': 'Invalid numbers provided.'}
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that summarizes articles."},
+                {"role": "user", "content": f"Summarize the following article:\n\n{article}"}
+            ],
+            max_tokens=150
+        )
+        return response['choices'][0]['message']['content'].strip()
+    except Exception as e:
+        return f"Error summarizing article: {str(e)}"
 
-DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL')
 
-def send_discord_notification(message):
-    if DISCORD_WEBHOOK_URL:
-        data = {"content": message}
-        try:
-            response = requests.post(DISCORD_WEBHOOK_URL, json=data)
-            if response.status_code == 204:
-                logging.info("Notification sent to Discord successfully.")
-            else:
-                logging.error(f"Failed to send notification to Discord: {response.status_code}")
-        except Exception as e:
-            logging.error(f"Exception occurred while sending notification to Discord: {str(e)}")
-    else:
-        logging.warning("Discord webhook URL not set. Skipping notification.")
+if __name__ == "__main__":
+    articles = get_News()
+    filter_article = []
+    for article in articles:
+        if article.get('content') and len(article['content']) > 0:
+            filter_article.append(article)
+    for i, article in enumerate(filter_article, 1):
+        print(f"Filtered Article {i}: {article['title']}")
+        print(f"Content: {article['content']}\n")
 
-@app.route('/calculate', methods=['POST'])
-def calculate_route():
-    input_data = request.get_json()
-    op = input_data.get('operation')
-    num1 = input_data.get('a')
-    num2 = input_data.get('b')
-    if not op or num1 is None or num2 is None:
-        logging.error("Operation and two numbers must be provided.")
-        return jsonify({'error': 'Operation and two numbers must be provided.'}), 400
-
-    calculation_result = calculate(op, num1, num2)
-    if 'error' not in calculation_result:
-        send_discord_notification(f"Calculation completed: {calculation_result}")
-    return jsonify(calculation_result)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)

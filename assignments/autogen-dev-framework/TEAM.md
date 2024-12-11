@@ -1,4 +1,4 @@
-## Jack - Planner Agent
-## Maks - Coding Agent
-## Brady - Debugging Agent
-## Neil - Testing Agent
+Lead - Maggie
+Lead Dev - Miguel
+Project Ownership - Eli
+Support devs -Katherine M , p katyal
