@@ -1,0 +1,7 @@
+PROJECT LEAD: Khoa Nguyen
+PRODUCT OWNERSHIP - Blye and Veronica
+QA - Elliot 
+DEVELOPER - Peter and David 
+
+Expected feature:
+* TBD
